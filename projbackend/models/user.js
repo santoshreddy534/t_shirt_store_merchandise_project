@@ -38,8 +38,10 @@ const userSchema = new Schema({
   purchases: {
     type: Array,
     default: [],
-  },
-});
+  }
+},
+{timestamps: true}
+);
 
 //virtual fields
 userSchema.virtual("password") /*this virtual field password holds the plain password example: password = qwerty123 */
