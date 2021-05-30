@@ -60,9 +60,11 @@ userSchema.virtual("password") /*this virtual field password holds the plain pas
   })
 
 //secure password
-userSchema.method = {
-  authenticate: function(plainPassword){
-    return this.securePassword(plainPassword) === this.encry_password;
+userSchema.methods = {
+  authenticate: function(plainPassword){                                /*plain password user enters*/
+    return this.securePassword(plainPassword) === this.encry_password; /* entered plain password is converted using
+                                                                         secure password method and gets compared with 
+                                                                        encry_password in database and returns True / False */
   },
   securePassword: function (plainPassword) {
     if (!plainPassword) return "";

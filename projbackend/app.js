@@ -1,17 +1,45 @@
-const express = require('express');
-const cors = require('cors')
-const mongoose = require('mongoose')
-
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 const app = express();
-const port = 3000;
 
-app.use(express.urlencoded({extended: true}))
+//my routes
+const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user");
+
+//port
+const port = process.env.PORT;
+
+//middlewares
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors());
 
-app.get('/', (req, res)=>{
-    res.send('Hey')
-})
+//DB connection
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
+  .then(() => {
+    console.log("DB CONNECTED");
+  })
+  .catch(() => {
+    console.log("DB NOT CONNECTED");
+  });
 
-app.listen(port, ()=>{
-    console.log('server running on '+port);
-})
+//Routes
+app.use(
+  "/api",
+  authRoutes
+);              /*route /api is prefixed to routes in authRoutes i.e /api/aignout */
+app.use("/api", userRoutes);
+
+//server start
+app.listen(port, () => {
+  console.log("server running on port " + port);
+});
